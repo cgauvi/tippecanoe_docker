@@ -1,0 +1,9 @@
+FROM ghcr.io/osgeo/gdal:ubuntu-full-latest 
+
+USER root
+
+RUN mkdir -p /var/lib/gdal/data
+WORKDIR /var/lib/gdal
+
+# Entry point
+ENTRYPOINT ["ogr2ogr"]

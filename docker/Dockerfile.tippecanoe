@@ -1,0 +1,37 @@
+FROM alpine:3.8
+
+# Update repos and install dependencies
+RUN apk update && apk upgrade
+
+RUN apk add --no-cache  bash
+RUN apk add --no-cache  g++
+RUN apk add --no-cache  make
+RUN apk add --no-cache  git
+RUN apk add --no-cache  sqlite-dev
+RUN apk add --no-cache  zlib-dev
+
+RUN apk add --no-cache  libgcc
+RUN apk add --no-cache  libstdc++
+RUN apk add --no-cache  sqlite-libs
+ 
+# Run this from docker/ on host 
+# Where 
+#
+# docker
+# | ---tippecanoe 
+RUN mkdir -p /opt/tippecanoe
+WORKDIR /opt/tippecanoe
+COPY ./tippecanoe /opt/tippecanoe
+
+RUN cd /opt/tippecanoe
+
+# Build tippecanoe
+RUN make -j 
+RUN make install
+
+RUN mkdir data
+RUN mkdir tiles
+RUN mkdir scripts
+
+# Entry point
+ENTRYPOINT ["tippecanoe"]

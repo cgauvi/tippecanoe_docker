@@ -1,0 +1,44 @@
+# Author: Charles Gauvin
+# Date: April 6 2023
+#
+# Docker compose for tippecanoe build
+#
+# To build/run, `docker compose -f docker-compose.yml --env-file ./config/.env up` from within . (docker directory)
+# 
+# To build a single service -e.g. the DB:  
+# `docker compose -f docker-compose.yml --env-file ./config/.env build db`
+#
+
+#
+
+version: "3.9"
+services:
+
+  # Produce local vector tiles as .mbtiles from local geojson 
+  # Can then host the resulting tiles with mbtileserver below
+  tippecanoe:
+    volumes:
+      - ../tiles:/opt/tippecanoe/tiles
+      - ../data:/opt/tippecanoe/data
+    container_name: tippecanoe_standalone
+    build:
+      context: .
+      dockerfile: Dockerfile.tippecanoe
+    stdin_open: true # docker run -i - for debugging
+    tty: true  
+
+  ogr2ogr:
+    build:
+      context: .
+      dockerfile: Dockerfile.gdal
+    volumes:
+      - ../data:/var/lib/gdal/data
+
+  curl:
+    build:
+      context: .
+      dockerfile: Dockerfile.curl
+    volumes:
+      - ../data:/var/lib/curl/data
+
+ 

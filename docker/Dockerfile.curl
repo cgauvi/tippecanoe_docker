@@ -1,0 +1,9 @@
+FROM curlimages/curl
+
+USER root
+
+RUN mkdir -p /var/lib/curl/data
+WORKDIR /var/lib/curl
+
+# Entry point
+ENTRYPOINT ["curl"]
