@@ -56,7 +56,7 @@ __From the root of the project__, do the following:
 (Optional) First download the data from the web (`$URL`) with curl and output to `./data/$OUTPUT_FILE_CURL`:
 
 ```
-    docker compose run curl \
+    docker compose -f docker/docker-compose.yml run curl \
         $URL \
         --output ./data/$OUTPUT_FILE_CURL \
         --insecure
@@ -65,7 +65,7 @@ __From the root of the project__, do the following:
 (Optional) Next, select the geo data to use for mbtile creation and place that in `./data/`. The data needs to be transformed to geojson for tippecanoe. You can do that by running the `ogr2ogr` service. 
 
 ```
-    docker compose run ogr2ogr \
+    docker compose -f docker/docker-compose.yml run ogr2ogr \
         -progress \
         -t_srs 'EPSG:3857' \
         -f "GeoJSON" \
@@ -76,7 +76,7 @@ __From the root of the project__, do the following:
 Finally, call tippecanoe with the input geojson 
 
 ```
-    docker compose run tippecanoe \
+    docker compose -f docker/docker-compose.yml run tippecanoe \
         -s 'EPSG:3857' \
         -z10  \
         -o ./tiles/$OUTPUT_FILE_MBTILES \
@@ -92,7 +92,7 @@ Finally, call tippecanoe with the input geojson
 
 See `./scripts/example_usage.sh` for a complete workflow example. 
 
-See `https://github.com/felt/tippecanoe/tree/2.24.0` for more details on tuppecanoe parameters + cookbook.
+See `https://github.com/felt/tippecanoe/tree/2.24.0` for more details on tippecanoe parameters + cookbook.
 
 
-The tippecanoe image is based on `v2.24.0`. Change the dockerfile if required. 
+The tippecanoe image was tested by cloning tippecanoe @ `v2.24.0`. It would be possible to clone the repo within the container, but this often leads to git getting hung up indefinitely (probably because of ssl and even with --insecure)
